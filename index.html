@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Talk to Dad & Mom</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #b0dff7;
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    #app { display: flex; align-items: center; justify-content: center; padding: 1.5rem 1rem; min-height: 100vh; width: 100%; }
+
+    .phone {
+      width: 320px; height: 580px; background: #87CEEB;
+      border-radius: 40px; border: 6px solid #2C2C2A;
+      overflow: hidden; position: relative; display: flex; flex-direction: column;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    }
+
+    .phone-notch {
+      width: 90px; height: 22px; background: #2C2C2A;
+      border-radius: 0 0 14px 14px; margin: 0 auto;
+      position: relative; z-index: 2; flex-shrink: 0;
+    }
+
+    .half {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      cursor: pointer; gap: 14px; transition: filter 0.15s; position: relative;
+    }
+    .half:active { filter: brightness(0.92); }
+    .half-top { border-bottom: 3px solid rgba(255,255,255,0.45); }
+
+    .avatar-placeholder {
+      width: 96px; height: 96px; border-radius: 50%;
+      background: rgba(255,255,255,0.55);
+      border: 3px solid rgba(255,255,255,0.8);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 48px;
+      overflow: hidden;
+    }
+    .avatar-placeholder img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+    .half-label { font-size: 26px; font-weight: 500; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.18); letter-spacing: 1px; }
+    .tap-hint { font-size: 12px; color: rgba(255,255,255,0.75); letter-spacing: 0.5px; }
+
+    .phone-bar { height: 20px; background: rgba(0,0,0,0.08); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .phone-bar-line { width: 60px; height: 4px; border-radius: 2px; background: rgba(0,0,0,0.2); }
+
+    #talk-screen {
+      display: none; position: absolute; inset: 0;
+      background: #87CEEB; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 16px; padding: 1.5rem; border-radius: 34px;
+    }
+
+    .talk-avatar-lg {
+      width: 110px; height: 110px; border-radius: 50%;
+      background: rgba(255,255,255,0.55);
+      border: 3px solid rgba(255,255,255,0.85);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 54px; overflow: hidden;
+    }
+    .talk-avatar-lg img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .talk-avatar-lg.speaking { animation: avpulse 0.65s ease-in-out infinite alternate; }
+    .talk-avatar-lg.listening { animation: listenring 0.8s ease-in-out infinite alternate; }
+    @keyframes avpulse { from { transform: scale(1); } to { transform: scale(1.1); } }
+    @keyframes listenring {
+      from { box-shadow: 0 0 0 0 rgba(255,255,255,0.7); }
+      to { box-shadow: 0 0 0 16px rgba(255,255,255,0.0); }
+    }
+
+    .talk-name-lg { font-size: 24px; font-weight: 500; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+
+    .speech-bubble {
+      background: rgba(255,255,255,0.75); border-radius: 18px;
+      padding: 12px 16px; font-size: 15px; line-height: 1.6;
+      color: #2C2C2A; max-width: 240px; text-align: center;
+      min-height: 52px; visibility: hidden;
+    }
+
+    .status-row { display: flex; align-items: center; gap: 8px; min-height: 24px; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.5); flex-shrink: 0; }
+    .status-dot.active { background: #fff; animation: dotpulse 0.7s ease-in-out infinite alternate; }
+    @keyframes dotpulse { from { opacity: 1; } to { opacity: 0.3; } }
+    .status-txt { font-size: 13px; color: rgba(255,255,255,0.9); text-align: center; }
+
+    .back-link {
+      font-size: 13px; color: rgba(255,255,255,0.8);
+      background: none; border: none; cursor: pointer;
+      text-decoration: underline; padding: 4px; margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="phone">
+    <div class="phone-notch"></div>
+
+    <div id="home-screen" style="flex:1; display:flex; flex-direction:column;">
+      <div class="half half-top" onclick="startTalk('dad')">
+        <div class="avatar-placeholder" id="dad-avatar-home">
+          <!-- Replace emoji with: <img src="dad.jpg" alt="Dad" /> -->
+          &#128104;
+        </div>
+        <p class="half-label">Dad</p>
+        <p class="tap-hint">tap to talk</p>
+      </div>
+      <div class="half" onclick="startTalk('mom')">
+        <div class="avatar-placeholder" id="mom-avatar-home">
+          <!-- Replace emoji with: <img src="mom.jpg" alt="Mom" /> -->
+          &#128105;
+        </div>
+        <p class="half-label">Mom</p>
+        <p class="tap-hint">tap to talk</p>
+      </div>
+    </div>
+
+    <div id="talk-screen">
+      <div class="talk-avatar-lg" id="talk-avatar">&#128104;</div>
+      <p class="talk-name-lg" id="talk-name">Dad</p>
+      <div class="speech-bubble" id="speech-bubble"></div>
+      <div class="status-row">
+        <div class="status-dot" id="status-dot"></div>
+        <p class="status-txt" id="status-txt">Getting ready...</p>
+      </div>
+      <button class="back-link" onclick="goHome()">go back</button>
+    </div>
+
+    <div class="phone-bar"><div class="phone-bar-line"></div></div>
+  </div>
+</div>
+
+<script>
+  // ─── VOICE CONFIGURATION ───────────────────────────────────────────────────
+  // To use specific voices, set these to the exact voice name from your device.
+  // Leave as null to auto-select best available voice.
+  // Example: const DAD_VOICE_NAME = "Google UK English Male";
+  const DAD_VOICE_NAME = null;
+  const MOM_VOICE_NAME = null;
+  // ──────────────────────────────────────────────────────────────────────────
+
+  let voices = [];
+  let currentParent = null;
+  let chatHistory = [];
+  let isSpeaking = false;
+  let recognition = null;
+  let isListening = false;
+  let shouldListen = false;
+
+  window.speechSynthesis.onvoiceschanged = () => { voices = window.speechSynthesis.getVoices(); };
+  voices = window.speechSynthesis.getVoices();
+
+  function getBestVoice(parent) {
+    if (!voices.length) voices = window.speechSynthesis.getVoices();
+    if (parent === 'dad') {
+      if (DAD_VOICE_NAME) return voices.find(v => v.name === DAD_VOICE_NAME) || voices[0];
+      return voices.find(v => /male|david|james|daniel|mark|google uk english male/i.test(v.name))
+        || voices.find(v => /en/i.test(v.lang)) || voices[0];
+    } else {
+      if (MOM_VOICE_NAME) return voices.find(v => v.name === MOM_VOICE_NAME) || voices[1] || voices[0];
+      return voices.find(v => /female|samantha|karen|victoria|lisa|google uk english female/i.test(v.name))
+        || voices.find(v => /en/i.test(v.lang) && v !== voices[0])
+        || voices[1] || voices[0];
+    }
+  }
+
+  function setStatus(text, dotActive) {
+    const el = document.getElementById('status-txt');
+    const dot = document.getElementById('status-dot');
+    if (el) el.textContent = text;
+    if (dot) dot.className = 'status-dot' + (dotActive ? ' active' : '');
+  }
+
+  function setAvatarState(state) {
+    const av = document.getElementById('talk-avatar');
+    if (!av) return;
+    av.className = 'talk-avatar-lg';
+    if (state) av.classList.add(state);
+  }
+
+  function speak(text, parent, onDone) {
+    window.speechSynthesis.cancel();
+    stopListening();
+    const utter = new SpeechSynthesisUtterance(text);
+    const v = getBestVoice(parent);
+    if (v) utter.voice = v;
+    utter.rate = 0.88;
+    utter.pitch = parent === 'mom' ? 1.15 : 0.92;
+    utter.volume = 1;
+    utter.onstart = () => {
+      isSpeaking = true;
+      setAvatarState('speaking');
+      setStatus('Speaking...', false);
+    };
+    utter.onend = () => {
+      isSpeaking = false;
+      if (onDone) onDone();
+    };
+    utter.onerror = () => {
+      isSpeaking = false;
+      if (onDone) onDone();
+    };
+    window.speechSynthesis.speak(utter);
+  }
+
+  function startListeningLoop() {
+    if (!shouldListen || isListening) return;
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) return;
+    recognition = new SR();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.continuous = false;
+    recognition.onstart = () => {
+      isListening = true;
+      setAvatarState('listening');
+      setStatus('Listening...', true);
+    };
+    recognition.onresult = async (e) => {
+      isListening = false;
+      const transcript = e.results[0][0].transcript;
+      if (!transcript.trim()) { if (shouldListen) startListeningLoop(); return; }
+      window.speechSynthesis.cancel();
+      setAvatarState('');
+      setStatus('Thinking...', false);
+      chatHistory.push({ role: 'user', content: transcript });
+      await getAIReply();
+    };
+    recognition.onnomatch = () => {
+      isListening = false;
+      if (shouldListen && !isSpeaking) startListeningLoop();
+    };
+    recognition.onerror = (e) => {
+      isListening = false;
+      if (e.error === 'no-speech' || e.error === 'aborted') {
+        if (shouldListen && !isSpeaking) setTimeout(startListeningLoop, 300);
+      } else {
+        if (shouldListen && !isSpeaking) setTimeout(startListeningLoop, 800);
+      }
+    };
+    recognition.onend = () => {
+      isListening = false;
+      if (shouldListen && !isSpeaking) setTimeout(startListeningLoop, 200);
+    };
+    try { recognition.start(); } catch(e) { isListening = false; }
+  }
+
+  function stopListening() {
+    isListening = false;
+    if (recognition) { try { recognition.abort(); } catch(e) {} recognition = null; }
+  }
+
+  function startTalk(parent) {
+    currentParent = parent;
+    chatHistory = [];
+    shouldListen = false;
+    document.getElementById('home-screen').style.display = 'none';
+    const ts = document.getElementById('talk-screen');
+    ts.style.display = 'flex';
+    const isD = parent === 'dad';
+
+    // Avatar — swap emoji for image if available
+    const av = document.getElementById('talk-avatar');
+    av.innerHTML = isD ? '&#128104;' : '&#128105;';
+    av.className = 'talk-avatar-lg';
+    document.getElementById('talk-name').textContent = isD ? 'Dad' : 'Mom';
+
+    setStatus('Getting ready...', false);
+    const sb = document.getElementById('speech-bubble');
+    sb.style.visibility = 'hidden'; sb.textContent = '';
+
+    const greeting = isD
+      ? "Hey buddy! It's Daddy! How are you today?"
+      : "Hello sweetheart! It's Mommy! How are you today?";
+
+    setTimeout(() => {
+      sb.textContent = greeting;
+      sb.style.visibility = 'visible';
+      chatHistory.push({ role: 'assistant', content: greeting });
+      speak(greeting, parent, () => {
+        shouldListen = true;
+        startListeningLoop();
+      });
+    }, 500);
+  }
+
+  function goHome() {
+    shouldListen = false;
+    stopListening();
+    window.speechSynthesis.cancel();
+    isSpeaking = false;
+    document.getElementById('talk-screen').style.display = 'none';
+    document.getElementById('home-screen').style.display = 'flex';
+    currentParent = null; chatHistory = [];
+  }
+
+  async function getAIReply() {
+    const pName = currentParent === 'dad' ? 'Daddy' : 'Mommy';
+    const sys = `You are ${pName}, talking to your 4-5 year old toddler. Be very warm, loving, and playful. Use very simple words and short sentences — 2 sentences max. Ask one simple fun follow-up question. Stay fully in character as ${pName}. Never mention AI or technology.`;
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: sys,
+          messages: chatHistory.slice(-12)
+        })
+      });
+      const data = await res.json();
+      const reply = data.content?.[0]?.text || "That is so cool! Tell me more!";
+      chatHistory.push({ role: 'assistant', content: reply });
+      const sb = document.getElementById('speech-bubble');
+      sb.textContent = reply; sb.style.visibility = 'visible';
+      speak(reply, currentParent, () => {
+        if (shouldListen) startListeningLoop();
+      });
+    } catch(e) {
+      const fallback = "Oh wow! Tell me more!";
+      const sb = document.getElementById('speech-bubble');
+      sb.textContent = fallback; sb.style.visibility = 'visible';
+      speak(fallback, currentParent, () => {
+        if (shouldListen) startListeningLoop();
+      });
+    }
+  }
+</script>
+</body>
+</html>
