@@ -12,53 +12,49 @@
       min-height: 100vh;
       display: flex; align-items: center; justify-content: center;
     }
-
-    #app { display: flex; align-items: center; justify-content: center; padding: 1.5rem 1rem; min-height: 100vh; width: 100%; }
-
+    #app {
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.5rem 1rem; min-height: 100vh; width: 100%;
+    }
     .phone {
-      width: 320px; height: 580px; background: #87CEEB;
+      width: 320px; height: 600px; background: #87CEEB;
       border-radius: 40px; border: 6px solid #2C2C2A;
       overflow: hidden; position: relative; display: flex; flex-direction: column;
       box-shadow: 0 8px 32px rgba(0,0,0,0.18);
     }
-
     .phone-notch {
       width: 90px; height: 22px; background: #2C2C2A;
       border-radius: 0 0 14px 14px; margin: 0 auto;
       position: relative; z-index: 2; flex-shrink: 0;
     }
 
+    /* HOME SCREEN */
+    #home-screen { flex: 1; display: flex; flex-direction: column; }
     .half {
       flex: 1; display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      cursor: pointer; gap: 14px; transition: filter 0.15s; position: relative;
+      cursor: pointer; gap: 14px; transition: filter 0.15s;
     }
     .half:active { filter: brightness(0.92); }
     .half-top { border-bottom: 3px solid rgba(255,255,255,0.45); }
-
     .avatar-placeholder {
       width: 96px; height: 96px; border-radius: 50%;
       background: rgba(255,255,255,0.55);
       border: 3px solid rgba(255,255,255,0.8);
       display: flex; align-items: center; justify-content: center;
-      font-size: 48px;
-      overflow: hidden;
+      font-size: 48px; overflow: hidden;
     }
     .avatar-placeholder img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-
     .half-label { font-size: 26px; font-weight: 500; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.18); letter-spacing: 1px; }
-    .tap-hint { font-size: 12px; color: rgba(255,255,255,0.75); letter-spacing: 0.5px; }
+    .tap-hint { font-size: 12px; color: rgba(255,255,255,0.75); }
 
-    .phone-bar { height: 20px; background: rgba(0,0,0,0.08); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-    .phone-bar-line { width: 60px; height: 4px; border-radius: 2px; background: rgba(0,0,0,0.2); }
-
+    /* TALK SCREEN */
     #talk-screen {
       display: none; position: absolute; inset: 0;
       background: #87CEEB; flex-direction: column;
       align-items: center; justify-content: center;
       gap: 16px; padding: 1.5rem; border-radius: 34px;
     }
-
     .talk-avatar-lg {
       width: 110px; height: 110px; border-radius: 50%;
       background: rgba(255,255,255,0.55);
@@ -74,27 +70,28 @@
       from { box-shadow: 0 0 0 0 rgba(255,255,255,0.7); }
       to { box-shadow: 0 0 0 16px rgba(255,255,255,0.0); }
     }
-
     .talk-name-lg { font-size: 24px; font-weight: 500; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.15); }
-
     .speech-bubble {
       background: rgba(255,255,255,0.75); border-radius: 18px;
       padding: 12px 16px; font-size: 15px; line-height: 1.6;
       color: #2C2C2A; max-width: 240px; text-align: center;
       min-height: 52px; visibility: hidden;
     }
-
     .status-row { display: flex; align-items: center; gap: 8px; min-height: 24px; }
     .status-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.5); flex-shrink: 0; }
     .status-dot.active { background: #fff; animation: dotpulse 0.7s ease-in-out infinite alternate; }
     @keyframes dotpulse { from { opacity: 1; } to { opacity: 0.3; } }
-    .status-txt { font-size: 13px; color: rgba(255,255,255,0.9); text-align: center; }
-
+    .status-txt { font-size: 13px; color: rgba(255,255,255,0.9); }
     .back-link {
       font-size: 13px; color: rgba(255,255,255,0.8);
       background: none; border: none; cursor: pointer;
       text-decoration: underline; padding: 4px; margin-top: 4px;
     }
+    .phone-bar {
+      height: 20px; background: rgba(0,0,0,0.08); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .phone-bar-line { width: 60px; height: 4px; border-radius: 2px; background: rgba(0,0,0,0.2); }
   </style>
 </head>
 <body>
@@ -102,18 +99,19 @@
   <div class="phone">
     <div class="phone-notch"></div>
 
-    <div id="home-screen" style="flex:1; display:flex; flex-direction:column;">
+    <!-- HOME SCREEN -->
+    <div id="home-screen">
       <div class="half half-top" onclick="startTalk('dad')">
-        <div class="avatar-placeholder" id="dad-avatar-home">
-          <!-- Replace emoji with: <img src="dad.jpg" alt="Dad" /> -->
+        <div class="avatar-placeholder">
+          <!-- To use a real photo, replace the line below with: <img src="dad.jpg" alt="Dad" /> -->
           &#128104;
         </div>
         <p class="half-label">Dad</p>
         <p class="tap-hint">tap to talk</p>
       </div>
       <div class="half" onclick="startTalk('mom')">
-        <div class="avatar-placeholder" id="mom-avatar-home">
-          <!-- Replace emoji with: <img src="mom.jpg" alt="Mom" /> -->
+        <div class="avatar-placeholder">
+          <!-- To use a real photo, replace the line below with: <img src="mom.jpg" alt="Mom" /> -->
           &#128105;
         </div>
         <p class="half-label">Mom</p>
@@ -121,6 +119,7 @@
       </div>
     </div>
 
+    <!-- TALK SCREEN -->
     <div id="talk-screen">
       <div class="talk-avatar-lg" id="talk-avatar">&#128104;</div>
       <p class="talk-name-lg" id="talk-name">Dad</p>
@@ -137,13 +136,18 @@
 </div>
 
 <script>
-  // ─── VOICE CONFIGURATION ───────────────────────────────────────────────────
-  // To use specific voices, set these to the exact voice name from your device.
-  // Leave as null to auto-select best available voice.
-  // Example: const DAD_VOICE_NAME = "Google UK English Male";
+  // ──────────────────────────────────────────────────────
+  // STEP 1: Open this file in Notepad / any text editor
+  // STEP 2: Replace YOUR_GEMINI_API_KEY_HERE with your key
+  // STEP 3: Save the file — done!
+  // ──────────────────────────────────────────────────────
+  const GEMINI_API_KEY = 'AIzaSyAJ9ZwSlkJnzAPWh8Z6IJSKREW3D_tzr5E';
+
+  // Optional: set exact voice names to match your device voices.
+  // In Chrome console run: speechSynthesis.getVoices().map(v => v.name)
   const DAD_VOICE_NAME = null;
   const MOM_VOICE_NAME = null;
-  // ──────────────────────────────────────────────────────────────────────────
+  // ──────────────────────────────────────────────────────
 
   let voices = [];
   let currentParent = null;
@@ -154,7 +158,7 @@
   let shouldListen = false;
 
   window.speechSynthesis.onvoiceschanged = () => { voices = window.speechSynthesis.getVoices(); };
-  voices = window.speechSynthesis.getVoices();
+  setTimeout(() => { voices = window.speechSynthesis.getVoices(); }, 300);
 
   function getBestVoice(parent) {
     if (!voices.length) voices = window.speechSynthesis.getVoices();
@@ -193,16 +197,27 @@
     utter.rate = 0.88;
     utter.pitch = parent === 'mom' ? 1.15 : 0.92;
     utter.volume = 1;
+
+    let ended = false;
+    const estimatedMs = Math.max((text.length / 8) * 1000, 2500);
+    const fallback = setTimeout(() => {
+      if (!ended) { ended = true; isSpeaking = false; if (onDone) onDone(); }
+    }, estimatedMs + 2000);
+
     utter.onstart = () => {
       isSpeaking = true;
       setAvatarState('speaking');
       setStatus('Speaking...', false);
     };
     utter.onend = () => {
+      if (ended) return; ended = true;
+      clearTimeout(fallback);
       isSpeaking = false;
       if (onDone) onDone();
     };
     utter.onerror = () => {
+      if (ended) return; ended = true;
+      clearTimeout(fallback);
       isSpeaking = false;
       if (onDone) onDone();
     };
@@ -210,70 +225,92 @@
   }
 
   function startListeningLoop() {
-    if (!shouldListen || isListening) return;
+    if (!shouldListen || isListening || isSpeaking) return;
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) return;
-    recognition = new SR();
-    recognition.lang = 'en-US';
-    recognition.interimResults = false;
-    recognition.continuous = false;
-    recognition.onstart = () => {
-      isListening = true;
-      setAvatarState('listening');
-      setStatus('Listening...', true);
-    };
-    recognition.onresult = async (e) => {
-      isListening = false;
-      const transcript = e.results[0][0].transcript;
-      if (!transcript.trim()) { if (shouldListen) startListeningLoop(); return; }
-      window.speechSynthesis.cancel();
-      setAvatarState('');
-      setStatus('Thinking...', false);
-      chatHistory.push({ role: 'user', content: transcript });
-      await getAIReply();
-    };
-    recognition.onnomatch = () => {
-      isListening = false;
-      if (shouldListen && !isSpeaking) startListeningLoop();
-    };
-    recognition.onerror = (e) => {
-      isListening = false;
-      if (e.error === 'no-speech' || e.error === 'aborted') {
+    if (!SR) {
+      setStatus('Use Chrome for voice support', false);
+      return;
+    }
+    try {
+      recognition = new SR();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.continuous = false;
+
+      recognition.onstart = () => {
+        isListening = true;
+        setAvatarState('listening');
+        setStatus('Listening...', true);
+      };
+
+      recognition.onresult = async (e) => {
+        isListening = false;
+        const transcript = e.results[0][0].transcript.trim();
+        if (!transcript) {
+          if (shouldListen && !isSpeaking) startListeningLoop();
+          return;
+        }
+        window.speechSynthesis.cancel();
+        isSpeaking = false;
+        setAvatarState('');
+        setStatus('Thinking...', false);
+        chatHistory.push({ role: 'user', parts: [{ text: transcript }] });
+        await getAIReply();
+      };
+
+      recognition.onnomatch = () => {
+        isListening = false;
         if (shouldListen && !isSpeaking) setTimeout(startListeningLoop, 300);
-      } else {
-        if (shouldListen && !isSpeaking) setTimeout(startListeningLoop, 800);
-      }
-    };
-    recognition.onend = () => {
+      };
+
+      recognition.onerror = (e) => {
+        isListening = false;
+        if (['no-speech', 'aborted', 'audio-capture'].includes(e.error)) {
+          if (shouldListen && !isSpeaking) setTimeout(startListeningLoop, 400);
+        } else {
+          setStatus('Mic error, retrying...', false);
+          if (shouldListen && !isSpeaking) setTimeout(startListeningLoop, 1000);
+        }
+      };
+
+      recognition.onend = () => {
+        isListening = false;
+        if (shouldListen && !isSpeaking) setTimeout(startListeningLoop, 250);
+      };
+
+      recognition.start();
+    } catch(err) {
       isListening = false;
-      if (shouldListen && !isSpeaking) setTimeout(startListeningLoop, 200);
-    };
-    try { recognition.start(); } catch(e) { isListening = false; }
+      if (shouldListen && !isSpeaking) setTimeout(startListeningLoop, 800);
+    }
   }
 
   function stopListening() {
     isListening = false;
-    if (recognition) { try { recognition.abort(); } catch(e) {} recognition = null; }
+    if (recognition) {
+      try { recognition.onend = null; recognition.abort(); } catch(e) {}
+      recognition = null;
+    }
   }
 
   function startTalk(parent) {
     currentParent = parent;
     chatHistory = [];
     shouldListen = false;
+    stopListening();
+
     document.getElementById('home-screen').style.display = 'none';
-    const ts = document.getElementById('talk-screen');
-    ts.style.display = 'flex';
+    document.getElementById('talk-screen').style.display = 'flex';
+
     const isD = parent === 'dad';
-
-    // Avatar — swap emoji for image if available
-    const av = document.getElementById('talk-avatar');
-    av.innerHTML = isD ? '&#128104;' : '&#128105;';
-    av.className = 'talk-avatar-lg';
+    document.getElementById('talk-avatar').innerHTML = isD ? '&#128104;' : '&#128105;';
     document.getElementById('talk-name').textContent = isD ? 'Dad' : 'Mom';
-
     setStatus('Getting ready...', false);
+    setAvatarState('');
+
     const sb = document.getElementById('speech-bubble');
-    sb.style.visibility = 'hidden'; sb.textContent = '';
+    sb.style.visibility = 'hidden';
+    sb.textContent = '';
 
     const greeting = isD
       ? "Hey buddy! It's Daddy! How are you today?"
@@ -282,7 +319,7 @@
     setTimeout(() => {
       sb.textContent = greeting;
       sb.style.visibility = 'visible';
-      chatHistory.push({ role: 'assistant', content: greeting });
+      chatHistory.push({ role: 'model', parts: [{ text: greeting }] });
       speak(greeting, parent, () => {
         shouldListen = true;
         startListeningLoop();
@@ -297,38 +334,56 @@
     isSpeaking = false;
     document.getElementById('talk-screen').style.display = 'none';
     document.getElementById('home-screen').style.display = 'flex';
-    currentParent = null; chatHistory = [];
+    currentParent = null;
+    chatHistory = [];
   }
 
   async function getAIReply() {
     const pName = currentParent === 'dad' ? 'Daddy' : 'Mommy';
-    const sys = `You are ${pName}, talking to your 4-5 year old toddler. Be very warm, loving, and playful. Use very simple words and short sentences — 2 sentences max. Ask one simple fun follow-up question. Stay fully in character as ${pName}. Never mention AI or technology.`;
+    const systemPrompt = `You are ${pName}, talking to your 4-5 year old toddler child. Be very warm, loving, and playful. Use very simple words and short sentences — 2 sentences max. Ask one simple fun follow-up question. Stay fully in character as ${pName}. Never mention AI or technology.`;
+
     try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          system: sys,
-          messages: chatHistory.slice(-12)
-        })
-      });
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            system_instruction: { parts: [{ text: systemPrompt }] },
+            contents: chatHistory.slice(-12),
+            generationConfig: { maxOutputTokens: 80, temperature: 0.8 }
+          })
+        }
+      );
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error?.message || `HTTP ${res.status}`);
+      }
+
       const data = await res.json();
-      const reply = data.content?.[0]?.text || "That is so cool! Tell me more!";
-      chatHistory.push({ role: 'assistant', content: reply });
+      const reply = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
+        || "That is so cool! Tell me more!";
+
+      chatHistory.push({ role: 'model', parts: [{ text: reply }] });
+
       const sb = document.getElementById('speech-bubble');
-      sb.textContent = reply; sb.style.visibility = 'visible';
+      sb.textContent = reply;
+      sb.style.visibility = 'visible';
+
       speak(reply, currentParent, () => {
         if (shouldListen) startListeningLoop();
       });
+
     } catch(e) {
-      const fallback = "Oh wow! Tell me more!";
+      console.error('Gemini error:', e);
       const sb = document.getElementById('speech-bubble');
-      sb.textContent = fallback; sb.style.visibility = 'visible';
-      speak(fallback, currentParent, () => {
+      sb.textContent = '⚠️ ' + (e.message || 'Something went wrong');
+      sb.style.visibility = 'visible';
+      setStatus('Error — retrying listen...', false);
+      setTimeout(() => {
         if (shouldListen) startListeningLoop();
-      });
+      }, 2500);
     }
   }
 </script>
